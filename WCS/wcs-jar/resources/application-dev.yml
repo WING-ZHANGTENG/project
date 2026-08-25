@@ -118,7 +118,7 @@ minio:
     secretKey: minioadmin
 
 
-isTest: true
+isTest: false
 
 wms:
     baseUrl:
