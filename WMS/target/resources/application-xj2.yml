@@ -160,7 +160,10 @@ isTest: true
 
 wcs:
     baseUrl: http://localhost:8007/wcs
+    contextPath: /wcs
     api: /api/task/send
+    palletOutApi: /wms/palletOut
+    cancelApi: /ams/communication/api/wms2rcs/tasks/cancel
 
 
 mes:
