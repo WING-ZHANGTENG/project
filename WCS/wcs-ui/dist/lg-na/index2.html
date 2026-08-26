@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WMS</title>
+  <link rel="icon" href="lib/lg_logo2.png">
+  <script src="lib/vue.js"></script>
+  <script src="lib/jq.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="header">
+            <img src="lib/lg_logo.png" alt="LG Logo" class="logo">
+            <h2>站台库存监控
+
+              <span  style="color:chocolate" v-if="list!=null && list.length>0">
+                {{list[0].lineName }}
+              </span>
+
+              <span style="color: yellow" v-if="list!=null && list.length>0">
+                {{list[0].itemTypeName}}
+
+              </span>
+            </h2>
+            <div class="date-time">{{dateTimeStr}}</div>
+          </div>
+          <div class="main-content">
+
+            <div v-for="item in list" class="inventory-item" :style="'width:'+90/list.length+'vw'">
+ 	 <div class="inventory-count">{{item.code}}</div>
+
+
+                <img src="lib/okPallet.png"  v-if="item.invenState==1 && item.isOk==1" >
+                <img src="lib/emptyPallet.png"  v-if="item.invenState==0">
+                <img src="lib/errorPallet.png"  v-else-if="item.isOk==0" >
+            <div style="font-size:5vh" class="inventory-status">{{item.itemCode}}</div>
+                <div class="inventory-status">{{item.itemName}}</div>
+              <!-- <div class="inventory-detail" style="color:#34BA3D" v-if="item.invenState==1&& item.isOk==1">正常</div>
+              <div class="inventory-detail"  style="color:#E6E6E6"  v-if="item.invenState==0">缺货</div> -->
+              <div class="inventory-detail"  style="color:#D9001B" >
+                <span v-if="item.disableState==1">站台禁用</span>
+                <span v-if="item.memo !=null && item.memo!='无货' && item.isOk==0"> {{item.memo}}</span>
+                <!-- <span> {{item.memo}}</span> -->
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        timer:null,
+        timer2:null,
+        dateTimeStr:"",
+        list:[
+            {
+                code:'001',
+                itemName:'活性物',
+                state:1,
+                msg:"站台为导电剂，托盘为CMC"
+            }
+            ,{
+                code:'002',
+                itemName:'CMC',
+                state:0,
+                msg:"站台为导电剂，托盘为CMC"
+            }
+            ,{
+                code:'003',
+                itemName:'导电剂',
+                state:-1,
+                msg:"站台为导电剂，托盘为CMC"
+            }
+            ,{
+                code:'003',
+                itemName:'导电剂',
+                state:-1,
+                msg:"站台为导电剂，托盘为CMC"
+            }
+        ]
+
+      },
+
+      created() {
+        var code = this.getQueryVariable("code");
+        console.info(code);
+      },
+      mounted() {
+         // 设置循环定时器
+            this.timer = setInterval(() => {
+            this.dateFormat()
+            }, 1000); // 每1秒count加1
+
+            // 设置循环定时器
+            this.timer2 = setInterval(() => {
+            this.getList()
+            }, 1000); // 每1秒count加1
+        },
+        beforeDestroy() {
+            // 在组件销毁前清除定时器
+            clearInterval(this.timer);
+            clearInterval(this.timer2);
+        },
+
+      methods: {
+
+        dateFormat() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从0开始，需要加1
+                const day = String(now.getDate()).padStart(2, '0');
+
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                // 拼接
+                this.dateTimeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            },
+
+        getList(){
+            var that = this;
+            var type = that.getQueryVariable("type");
+            $.ajax({
+                url: "http://192.168.10.45:8007/wcs/wcs-base/ProPositionContent/findByCodeGroup?codeGroup=" + type,
+                //url: "http://localhost:8007/wcs/wcs-base/ProPositionContent/findByCodeGroup?codeGroup=" + type,
+                dataType: "json",
+                type: "get",
+                async: false,
+                headers: {
+                Accept: "*/*",
+                },
+                beforeSend: function () {},
+                contentType: "application/json;charset=utf-8", //这个参数也是header参数
+                processData: false, //不去处理发送的数据
+                error: function (res) {},
+                success: function (res) {
+                  that.list=res.rows;
+                },
+            });
+
+        },
+
+        //从浏览器url拿参数
+        getQueryVariable: function (variable) {
+          var url = decodeURI(decodeURI(location.search)); //解码  解决中文乱码问题
+          var query = url.substring(1);
+          var vars = query.split("&");
+          for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+              return pair[1];
+            }
+          }
+          return undefined;
+        },
+      },
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0B1A30;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+   .header {
+      height: 10vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2A3D65;
+      padding: 10px 20px;
+    }
+
+   .logo {
+    height: 7vh;
+    }
+
+   .date-time {
+      font-size: 2.5vh;
+    }
+
+   .main-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+   .inventory-item {
+      background-color: #2A3D65;
+      border-radius: 5px;
+      padding: 20px;
+      margin-top: 5vh;
+      margin-left: 2vw;
+      margin-right: 2vw;
+      text-align: center;
+      width: 30vw;
+      height: 60vh;
+    }
+    /* <div class="inventory-status">CMC</div>
+        <img src="cmc_icon.png"  >
+        <div class="inventory-count">002</div>
+        <div class="inventory-detail">缺货</div> */
+
+
+   .inventory-status {
+      height: 7vh;
+      line-height: 10vh;
+      font-size: 4vh;
+      color: yellow;
+    }
+    .inventory-item img {
+      margin-top: 1vh;
+      width: 20vh;
+      height: 20vh;
+    }
+   .inventory-count {
+    height: 10vh;
+    line-height: 10vh;
+      font-size: 6vh;
+      margin: 10px 0;
+    }
+
+   .inventory-detail {
+    height: 10vh;
+    line-height: 6vh;
+      font-size: 4vh;
+      color: red;
+    }
+  </style>
+</body>
+
+</html>
