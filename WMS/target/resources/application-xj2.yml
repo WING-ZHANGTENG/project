@@ -19,40 +19,21 @@ server:
 # 数据源配置
 spring:
     mail:
-        host: smtp.qq.com
-        port: 465
-        username: 2578944916@qq.com
-        password: fnqhkiygpughechf
+        # Seagate SMTP relay: the deployment server must be whitelisted by the mail server.
+        host: mailhost.seagate.com
+        port: 25
         protocol: smtp
         default-encoding: UTF-8
+        from: sms-wms@seagate.com
         properties:
             mail:
                 smtp:
-                    auth: true
-                    ssl:
-                        enable: true
+                    auth: false
+                    starttls:
+                        enable: false
                     connectiontimeout: 5000
                     timeout: 10000
                     writetimeout: 10000
-    # Microsoft 365 / Exchange 企业邮箱配置
-    # 切换时注释掉上面的 QQ 配置，并取消下面注释即可，Java 业务代码无需修改
-    # mail:
-    #     host: smtp.office365.com
-    #     port: 587
-    #     username: your_company_mail@company.com
-    #     password: your_microsoft_mail_password_or_app_password
-    #     protocol: smtp
-    #     default-encoding: UTF-8
-    #     properties:
-    #         mail:
-    #             smtp:
-    #                 auth: true
-    #                 starttls:
-    #                     enable: true
-    #                     required: true
-    #                 connectiontimeout: 5000
-    #                 timeout: 10000
-    #                 writetimeout: 10000
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.cj.jdbc.Driver
@@ -183,6 +164,10 @@ seagate:
 
 xj:
     finishGoodsP1Api: http://127.0.0.1:8088/seagate/p1/finished-goods
+    p4:
+        case-id-url: http://tkweb-pcksvc.kor.thai.seagate.com/PckWebJson/Ver1/GetSerialList
+        fis-url: http://woopiffsl08c.seagate.com:8080/Getput?TYPE=GET&CLA=STRK
+        external-timeout-ms: 10000
     mail:
         p1-inventory:
             enabled: true
