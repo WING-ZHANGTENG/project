@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/005_approved_vendor_box_type.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/008_p1_inventory_transaction_alert_mail.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/009_p1_inventory_sync_lock.sql" dialect="MySQL" />
   </component>
 </project>

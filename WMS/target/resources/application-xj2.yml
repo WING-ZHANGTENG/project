@@ -16,6 +16,27 @@ server:
             # Tomcat启动初始化的线程数，默认值10
             min-spare: 100
 
+# Set to true only when verifying mail delivery with the isolated QQ mailbox.
+email:
+    test: true
+    test-smtp:
+        host: smtp.qq.com
+        port: 465
+        username: 2578944916@qq.com
+        password: fnqhkiygpughechf
+        protocol: smtp
+        default-encoding: UTF-8
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    ssl:
+                        enable: true
+                    connectiontimeout: 5000
+                    timeout: 10000
+                    writetimeout: 10000
+
+
 # 数据源配置
 spring:
     mail:
@@ -45,6 +66,7 @@ spring:
                 #                password: yyyx0000
                 url: jdbc:mysql://localhost:3306/deer_wms_xj?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
+#                password: 12!@qwQW
                 password: root
             # 从库数据源
             slave:
@@ -142,8 +164,7 @@ isTest: true
 wcs:
     baseUrl: http://localhost:8007/wcs
     contextPath: /wcs
-    api: /api/task/send
-    palletOutApi: /wms/palletOut
+    api: /wms/sendOutTask
     cancelApi: /ams/communication/api/wms2rcs/tasks/cancel
 
 
@@ -151,15 +172,14 @@ mes:
     baseUrl: http://192.168.88.35:8080/wms
 
 seagate:
-    P1apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
-    P1FinallyApiUrl: https://api-dev.seagate.com/rest/iscm/asrs/event/status
-    P1FinallyApiKey: eed810fa-2ebd-4991-b805-f9eefd46492d
-    P4apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
+    P1apiUrl: https://api-tst.seagate.com/rest/iscm/asrs/v1/postEvents
+    P1ApiKey: fc1552d7-c233-435d-9e44-a15c7e5696ca
+    P4apiUrl: https://sgsdiedsw001/MaterialRecommandation/api/FSU/PostEvents
     P6apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
     P9apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/queryP9Inventory
     site: SMS
     asrsName: ASRS1
-    apiKey: eed810fa-2ebd-4991-b805-f9eefd46492d
+    apiKey: fc1552d7-c233-435d-9e44-a15c7e5696ca
     canRun: true
 
 xj:
@@ -168,10 +188,6 @@ xj:
         case-id-url: http://tkweb-pcksvc.kor.thai.seagate.com/PckWebJson/Ver1/GetSerialList
         fis-url: http://woopiffsl08c.seagate.com:8080/Getput?TYPE=GET&CLA=STRK
         external-timeout-ms: 10000
-    mail:
-        p1-inventory:
-            enabled: true
-            cron: "0 0 7 * * ?"
-            ware-code: P1
-            report-name: P1 warehouse inventory details
-            body: Please find the attachment
+        test-case-id:
+            item-code: 210614102
+            quantity: 9999

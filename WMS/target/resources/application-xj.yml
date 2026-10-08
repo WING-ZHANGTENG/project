@@ -16,15 +16,32 @@ server:
             # Tomcat启动初始化的线程数，默认值10
             min-spare: 100
 
-# 数据源配置
 spring:
+    # 邮件配置（Seagate SMTP 中继，部署服务器需加入邮件服务器白名单；与 application-xj2.yml 保持一致）
+    # 缺少 spring.mail.host 时 MailSenderAutoConfiguration 不会创建 JavaMailSender，导致 MailAttachmentServiceImpl 启动失败
+    mail:
+        host: mailhost.seagate.com
+        port: 25
+        protocol: smtp
+        default-encoding: UTF-8
+        from: sms-wms@seagate.com
+        properties:
+            mail:
+                smtp:
+                    auth: false
+                    starttls:
+                        enable: false
+                    connectiontimeout: 5000
+                    timeout: 10000
+                    writetimeout: 10000
+    # 数据源配置
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.cj.jdbc.Driver
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://43.106.16.30:3306/deer_wms?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://sh-cdb-60jldfhk.sql.tencentcdb.com:62802/deer_wms_xj?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: yyyx0000
 #                url: jdbc:mysql://192.168.3.11:3306/yc_sy_wms?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
@@ -125,14 +142,32 @@ isTest: true
 
 wcs:
     baseUrl: http://localhost:8007/wcs
+    contextPath: /wcs
+    api: /wms/sendOutTask
+    cancelApi: /ams/communication/api/wms2rcs/tasks/cancel
 
 
 mes:
     baseUrl: http://192.168.88.35:8080/wms
 
 seagate:
-    apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
-    p9InventoryUrl:
+    P1apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
+    P1FinallyApiUrl: https://api-dev.seagate.com/rest/iscm/asrs/event/status
+    P1FinallyApiKey: eed810fa-2ebd-4991-b805-f9eefd46492d
+    P4apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
+    P6apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/postEvents
+    P9apiUrl: https://api-dev.seagate.com/rest/iscm/asrs/queryP9Inventory
     site: SMS
     asrsName: ASRS1
     apiKey: eed810fa-2ebd-4991-b805-f9eefd46492d
+    canRun: true
+
+xj:
+    finishGoodsP1Api: http://127.0.0.1:8088/seagate/p1/finished-goods
+    p4:
+        case-id-url: http://tkweb-pcksvc.kor.thai.seagate.com/PckWebJson/Ver1/GetSerialList
+        fis-url: http://woopiffsl08c.seagate.com:8080/Getput?TYPE=GET&CLA=STRK
+        external-timeout-ms: 10000
+        test-case-id:
+            item-code: 210614102
+            quantity: 9999
