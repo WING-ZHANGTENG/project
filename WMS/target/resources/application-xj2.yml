@@ -166,6 +166,9 @@ wcs:
     contextPath: /wcs
     api: /wms/sendOutTask
     cancelApi: /ams/communication/api/wms2rcs/tasks/cancel
+    # WCS设备查询接口：GET，返回 {"code":200,"data":[{"code":"","name":"","ip":"","isOnline":1,"state":0,"locationCode":""}]}
+    deviceInfoApi: /wms/deviceInfo/list
+    deviceInfoTimeoutMs: 5000
 
 
 mes:
