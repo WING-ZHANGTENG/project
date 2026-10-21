@@ -1,14 +1,14 @@
--- Deployment schema script for device_info and warn_msg.
--- It is idempotent and can be included in the deployment SQL sequence.
+-- device_info 和 warn_msg 部署建表脚本。
+-- 表已存在时不进行任何修改；已部署环境的字段升级由后续编号脚本处理。
 
 CREATE TABLE IF NOT EXISTS `device_info` (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `ip` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'IP',
-  `location_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'Position code',
-  `is_online` int NOT NULL DEFAULT 0 COMMENT 'Online state: 0-offline, 1-online',
-  `state` int NOT NULL DEFAULT 0 COMMENT 'Device state: 0-idle, 1-running, 2-fault',
+  `ip` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'IP地址',
+  `location_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '位置编码',
+  `is_online` int NOT NULL DEFAULT 0 COMMENT '是否在线：0-否，1-是',
+  `state` int NOT NULL DEFAULT 0 COMMENT '设备状态：0-空闲，1-运行中，2-故障',
   `create_time` datetime NULL DEFAULT NULL,
   `create_user_id` bigint NULL DEFAULT NULL,
   `create_user_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
@@ -21,10 +21,15 @@ CREATE TABLE IF NOT EXISTS `device_info` (
 
 CREATE TABLE IF NOT EXISTS `warn_msg` (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'Device code',
-  `type` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'Log status code',
-  `warn_msg` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT 'Log message',
-  `log_time` datetime NULL DEFAULT NULL COMMENT 'Log time',
+  `code` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '设备编码',
+  `type` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '日志状态码',
+  `warn_msg` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '日志信息',
+  `log_time` datetime NULL DEFAULT NULL COMMENT '日志时间',
+  `send_status` int NOT NULL DEFAULT 0 COMMENT '首次告警发送状态：0-待发送，1-已发送，2-发送失败，3-无需发送',
+  `clear_status` int NOT NULL DEFAULT 0 COMMENT '告警消除状态：0-未消除，1-待通知，2-已通知，3-通知失败，4-无需通知',
+  `clear_time` datetime NULL DEFAULT NULL COMMENT '告警消除时间',
+  `active_alarm_key` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '活动告警唯一键：设备编码和异常类型',
+  `repeat_count` int NOT NULL DEFAULT 1 COMMENT '同一活动告警的重复上报次数',
   `create_time` datetime NULL DEFAULT NULL,
   `create_user_id` bigint NULL DEFAULT NULL,
   `create_user_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
@@ -32,137 +37,6 @@ CREATE TABLE IF NOT EXISTS `warn_msg` (
   `update_user_id` bigint NULL DEFAULT 0,
   `update_user_name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_warn_msg_code_time` (`code`, `log_time`)
+  KEY `idx_warn_msg_code_time` (`code`, `log_time`),
+  UNIQUE KEY `uk_warn_msg_active_alarm_key` (`active_alarm_key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=237 CHARACTER SET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=DYNAMIC;
-
--- Add fields missing from device_info installations created before location code support.
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'device_info' AND column_name = 'location_code'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE device_info ADD COLUMN location_code varchar(255) NULL DEFAULT NULL COMMENT ''Position code'' AFTER ip',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @index_exists = (
-  SELECT COUNT(*) FROM information_schema.statistics
-  WHERE table_schema = DATABASE() AND table_name = 'device_info' AND index_name = 'idx_device_info_code'
-);
-SET @sql = IF(
-  @index_exists = 0,
-  'ALTER TABLE device_info ADD KEY idx_device_info_code (code)',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- Add fields missing from the original warn_msg table used by WCS log reporting.
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'log_time'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN log_time datetime NULL DEFAULT NULL COMMENT ''Log time'' AFTER warn_msg',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'create_time'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN create_time datetime NULL DEFAULT NULL AFTER log_time',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'create_user_id'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN create_user_id bigint NULL DEFAULT NULL AFTER create_time',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'create_user_name'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN create_user_name varchar(255) NULL DEFAULT NULL AFTER create_user_id',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'update_time'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN update_time datetime NULL DEFAULT NULL AFTER create_user_name',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'update_user_id'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN update_user_id bigint NULL DEFAULT 0 AFTER update_time',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @column_exists = (
-  SELECT COUNT(*) FROM information_schema.columns
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND column_name = 'update_user_name'
-);
-SET @sql = IF(
-  @column_exists = 0,
-  'ALTER TABLE warn_msg ADD COLUMN update_user_name varchar(50) NULL DEFAULT NULL AFTER update_user_id',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SET @index_exists = (
-  SELECT COUNT(*) FROM information_schema.statistics
-  WHERE table_schema = DATABASE() AND table_name = 'warn_msg' AND index_name = 'idx_warn_msg_code_time'
-);
-SET @sql = IF(
-  @index_exists = 0,
-  'ALTER TABLE warn_msg ADD KEY idx_warn_msg_code_time (code, log_time)',
-  'SELECT 1'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
