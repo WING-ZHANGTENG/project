@@ -1,0 +1,17 @@
+CREATE TABLE `deer_wms_xj`.device_info`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `ip` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'IP',
+  `location_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'Position code',
+  `is_online` int NOT NULL DEFAULT 0 COMMENT 'Online state: 0-offline, 1-online',
+  `state` int NOT NULL DEFAULT 0 COMMENT 'Device state: 0-idle, 1-running, 2-fault',
+  `create_time` datetime NULL DEFAULT NULL,
+  `create_user_id` bigint NULL DEFAULT NULL,
+  `create_user_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  `update_user_id` bigint NULL DEFAULT 0,
+  `update_user_name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_device_info_code`(`code` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1000 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
