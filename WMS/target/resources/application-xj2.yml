@@ -184,6 +184,9 @@ seagate:
     asrsName: ASRS1
     apiKey: fc1552d7-c233-435d-9e44-a15c7e5696ca
     canRun: true
+    # P1 纸箱转 P4 前的 PWAIN 预处理接口。
+    pwain-transfer-url: https://stg-sms.seagate.com:8009/PWAIN.WebService/api/v1/pallet-case-drvs-transfer
+    pwain-timeout-ms: 10000
 
 xj:
     finishGoodsP1Api: http://127.0.0.1:8088/seagate/p1/finished-goods
@@ -194,3 +197,9 @@ xj:
         test-case-id:
             item-code: 210614102
             quantity: 9999
+    p6:
+        # FIS CURRENT_ATTRIBUTES query endpoint for HDD serial numbers.
+        fis-url: http://woopiffsl08c.seagate.com:8080/Getput?TYPE=GET&CLA=STRK
+        external-timeout-ms: 10000
+        # true rejects unrecognized totebox codes; false allows them with an empty box type.
+        strict-box-type: true
