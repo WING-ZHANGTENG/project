@@ -203,3 +203,10 @@ xj:
         external-timeout-ms: 10000
         # true rejects unrecognized totebox codes; false allows them with an empty box type.
         strict-box-type: true
+        # 每种周转箱的总槽位数。不满箱放料时，用于计算剩余空位并排序。
+        # 例如：box-type-capacities: { "1": 20, "2": 20 }
+        # 未配置的箱型仍可用于空箱出库，但不会作为不满箱候选。
+        box-type-capacities: {}
+        outbound:
+            # WCS position code for the P6 automatic loading machine. This is not a WMS cell_info code.
+            auto-loading-to-cell-code: aaaa

@@ -16,5 +16,14 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/012_device_info_warn_msg.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/013_warn_msg_alarm_lifecycle.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/014_seagate_fis_e10_sys_config.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/015_p6_serial_no_attributes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/016_p6_p9_line_info.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/018_p6_serial_no_search_attributes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/019_interface_record_category_module.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/020_p6_serial_no_fis_failure_attributes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/021_interface_record_archive.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/022_p6_pallet_info_box_type.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/023_p6_empty_tote_out_task_define.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/024_p6_loading_tote_out_task_define.sql" dialect="MySQL" />
   </component>
 </project>
