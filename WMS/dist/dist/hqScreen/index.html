@@ -9,7 +9,7 @@
     <script src="vue.js"></script>
     <!-- 引入 ECharts -->
     <script src="echarts.js"></script>
- 
+
 
     <script src="dataV.js"></script>
 
@@ -27,7 +27,7 @@
             padding: 20px;
             margin: 0;
         }
- 
+
 
        .number-box {
             border-radius: 8px;
@@ -91,7 +91,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             height: 30vh;
             padding-left: 50px;
- 
+
         }
 
        .card h3 {
@@ -150,34 +150,34 @@
                 <el-col :span="12">
                     <div style="width:100%;margin-top: 5px; text-align: center"> <img  style="width:70%"  src="hq.png" /> </div>
                 </el-col>
-                <el-col :span="6">   
+                <el-col :span="6">
                     <div style="width:100%;margin-top: 15px;  padding-left: 10%;font-size: 2vh;">  {{currentTime }}</div>
                 </el-col>
               </el-row>
-         
-            
-          
+
+
+
         </div>
      <!--  <div style="width:100vw;height:80px; ">
             <el-row>
                 <el-col :span="6">   <dv-decoration-1 style="width:20vw;height:50px;float:left" /> </el-col>
-              
-              
-             
+
+
+
                 <el-col :span="6">  <dv-decoration-8   style="width:300px;height:50px;float:right" />   </el-col>
-                
-                <el-col :span="6">  
+
+                <el-col :span="6">
                     <dv-decoration-8 :reverse="true" style="width:300px;height:50px;float:left" /></el-col>
 
                     <el-col :span="6">   <dv-decoration-1 style="width:20vw;height:50px;float:right" /></el-col>
-              </el-row> 
+              </el-row>
         </div>-->
 
-       
 
 
-        
-       
+
+
+
         <div class="top-row">
             <div class="number-box">
                 <h3>库位总数</h3>
@@ -206,7 +206,7 @@
   <h3 v-if="lineCode=='1'">1号操作台</h3>
                     <h3 v-if="lineCode=='2'">2号操作台</h3>
 </div>
-                  
+
                         <el-row>
                             <el-col :span="10">
                                 <div style="font-size: 1.5vh;line-height: 3vh;">托盘号</div>
@@ -220,18 +220,18 @@
                                 <div  style="font-size: 1.5vh;line-height: 3vh;">{{piakTask.item_name}}</div>
                                 <div  style="font-size: 1.5vh;line-height: 3vh;">{{piakTask.quantity}}</div>
                             </el-col>
-                           
+
                           </el-row>
-                       
-                         
-                   
+
+
+
                 </div>
             </el-col>
           </el-row>
-        
-           
-            
-        
+
+
+
+
         <div>
             <table style="font-size: 1.8vh;">
                 <thead>
@@ -247,7 +247,7 @@
                         <td>{{ item.toCellCode }}</td>
                         <td>{{ item.createTime }}</td>
                         <td>{{ item.memo }}</td>
-                       
+
                     </tr>
                 </tbody>
             </table>
@@ -265,7 +265,8 @@
                     currentTime:null,
                     timer:null,
                     timer2:null,
-                    url:"http://192.168.99.80:8008/wms",
+                    // 使用当前页面同源的 Nginx 代理，避免写死服务器 IP、端口和 HTTP 协议。
+                    url:"/wms_api",
                     tableColumns: [
                         {
                             prop: 'trayNumber',
@@ -291,7 +292,7 @@
                             prop: 'info',
                             label: '信息'
                         },
-                       
+
                     ],
                     tableData: [
                         {
@@ -349,7 +350,7 @@
                                     },
                                     axisLabel: {
                                         color: '#e5e7eb',
- 
+
                                     }
                                 },
 dataZoom: [{
@@ -379,7 +380,7 @@ dataZoom: [{
                                             color: '#e5e7eb'
                                         }
                                     },
-                                    
+
                                 ]
                         }
                 };
@@ -395,11 +396,11 @@ dataZoom: [{
                             // 初始化 echarts 实例
                             that.myChart = echarts.init(chartDom);
                             // 设置图表配置项
-                             
+
                     }
                 });
                 },500);
-              
+
 
                 this.timer = setInterval(() => {
                   this.updateDateTime();
@@ -415,9 +416,9 @@ dataZoom: [{
                 clearInterval(this.timer);
                 clearInterval(this.timer2);
             },
-           
+
             methods:{
-           
+
                 updateDateTime() {
                     const now = new Date();
                     const year = now.getFullYear();
@@ -427,7 +428,7 @@ dataZoom: [{
                     const minutes = now.getMinutes().toString().padStart(2, '0');
                     const seconds = now.getSeconds().toString().padStart(2, '0');
                     this.currentTime =year+  "-"+month+"-"+day+"-"+" "+hours+":"+minutes+":"+seconds
-                   
+
                 },
                 getParameterByName(name) {
                         const url = window.location.href;
@@ -455,7 +456,7 @@ dataZoom: [{
                     error: function (res) {
 
                     },
-                    success: function (res) { 
+                    success: function (res) {
                         if (res.code == 200) {
                             that.taskWeekReportOption.xAxis.data=[];
                             that.taskWeekReportOption.series[0].data=[];
@@ -468,7 +469,7 @@ dataZoom: [{
                                 var inCount=element.inCount==null?0:element.inCount;
                                 that.taskWeekReportOption.series[0].data.push(inCount);
                                 that.taskWeekReportOption.series[1].data.push(outCount);
-                            } 
+                            }
                             that.myChart.setOption(that.taskWeekReportOption);
                         }
                         else {
@@ -495,16 +496,16 @@ dataZoom: [{
                     error: function (res) {
 
                     },
-                    success: function (res) { 
+                    success: function (res) {
                         if (res.code == 200) {
                             that.CellReport=res.data;
-                             
-                        } 
+
+                        }
                     },
                     });
                 },
 
-          
+
 
             getPickTask( ) {
                 var that = this;
@@ -522,20 +523,20 @@ dataZoom: [{
                 error: function (res) {
 
                 },
-                success: function (res) { 
+                success: function (res) {
                     if (res.code == 200) {
                         that.piakTask=res.data;
-                        
-                    } 
+
+                    }
                 },
                 });
             },
 
-                
+
 
                 getTasks() {
                     var that = this;
-                    var lineCode =this.lineCode; 
+                    var lineCode =this.lineCode;
                     $.ajax({
                     url:  that.url+"/wms-wcs/taskInfo/findByCzt?lineCode=" + lineCode,
                     dataType: "json",
@@ -550,11 +551,11 @@ dataZoom: [{
                     error: function (res) {
 
                     },
-                    success: function (res) { 
+                    success: function (res) {
                         if (res.code == 200) {
-                             
+
                             var data = res.rows;
-                           
+
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
                                 if(element.type=="1"){
@@ -563,18 +564,18 @@ dataZoom: [{
                                 if(element.type=="2"){
                                     element.type="出库";
                                 }
-                                
+
                             }
                             that.tableData =  data;
-                             
-                            
+
+
                         }
                         else {
 
                         }
 
-                         
-                  
+
+
                     },
                     });
                 },
@@ -584,4 +585,4 @@ dataZoom: [{
     </script>
 </body>
 
-</html>    
+</html>
