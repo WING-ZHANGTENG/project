@@ -206,7 +206,10 @@ xj:
         # 每种周转箱的总槽位数。不满箱放料时，用于计算剩余空位并排序。
         # 例如：box-type-capacities: { "1": 20, "2": 20 }
         # 未配置的箱型仍可用于空箱出库，但不会作为不满箱候选。
-        box-type-capacities: {}
+        box-type-capacities: { "1": 20, "2": 20 }
         outbound:
             # WCS position code for the P6 automatic loading machine. This is not a WMS cell_info code.
             auto-loading-to-cell-code: aaaa
+            # WCS position code for the P6 picking machine. This is not a WMS cell_info code.
+            # Replace P6_PICKING_OUT after the physical endpoint is confirmed.
+            picking-to-cell-code: P6_PICKING_OUT

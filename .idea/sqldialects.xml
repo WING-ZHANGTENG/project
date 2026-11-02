@@ -25,5 +25,7 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/022_p6_pallet_info_box_type.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/023_p6_empty_tote_out_task_define.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/024_p6_loading_tote_out_task_define.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/025_p6_picking_tote_out_task_define.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/026_migrate_spring_scheduled_to_quartz.sql" dialect="MySQL" />
   </component>
 </project>
