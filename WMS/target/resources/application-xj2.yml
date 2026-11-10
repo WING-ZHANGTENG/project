@@ -213,3 +213,14 @@ xj:
             # WCS position code for the P6 picking machine. This is not a WMS cell_info code.
             # Replace P6_PICKING_OUT after the physical endpoint is confirmed.
             picking-to-cell-code: P6_PICKING_OUT
+    p9:
+        # P9 carton attributes query service. Replace this placeholder with the confirmed Seagate URL.
+        carton-query-url: http://127.0.0.1:8088/seagate/p9/carton
+        # Validate_Batch_ASRS_Carton endpoint. Keep empty until the confirmed environment URL is supplied.
+        batch-validation-url: ""
+        batch-request-field: cartonIds
+        connect-timeout-ms: 10000
+        read-timeout-ms: 10000
+        outbound:
+            # WCS branch-line destination/station code.
+            to-cell-code: P9_OUT

@@ -1,5 +1,5 @@
 -- WCS设备异常告警生命周期字段。
--- 同一设备的同一种未消除异常只保留一条活动记录；历史已消除记录不受唯一约束影响。
+-- 活动告警生命周期基础字段；具体唯一键规则由后续升级脚本维护。
 
 SET @schema_name = DATABASE();
 
@@ -45,7 +45,7 @@ SELECT IF(
         WHERE TABLE_SCHEMA = @schema_name AND TABLE_NAME = 'warn_msg' AND COLUMN_NAME = 'active_alarm_key'
     ),
     'SELECT ''warn_msg.active_alarm_key already exists''',
-    'ALTER TABLE `warn_msg` ADD COLUMN `active_alarm_key` varchar(128) NULL DEFAULT NULL COMMENT ''活动告警唯一键：设备编码和异常类型'' AFTER `clear_time`'
+    'ALTER TABLE `warn_msg` ADD COLUMN `active_alarm_key` varchar(128) NULL DEFAULT NULL COMMENT ''活动告警唯一键'' AFTER `clear_time`'
 ) INTO @ddl;
 PREPARE stmt FROM @ddl;
 EXECUTE stmt;

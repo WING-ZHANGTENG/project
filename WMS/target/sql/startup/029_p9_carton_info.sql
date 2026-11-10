@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS `p9_carton_info` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pallet_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'WMS托盘编码',
+  `carton_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '原始箱码',
+  `ware_code` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'P9' COMMENT '仓库编码',
+  `source_status` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '外部接口状态',
+  `message` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '外部接口消息',
+  `ccust` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `mdl` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `rqty` decimal(18,4) NULL DEFAULT NULL,
+  `dqty` decimal(18,4) NULL DEFAULT NULL,
+  `pn` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `ag` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `grpdesc` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `flow_status` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '流转状态',
+  `query_success` int NOT NULL DEFAULT 0 COMMENT '接口调用状态 0-失败 1-成功',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_p9_carton_code` (`carton_code`),
+  KEY `idx_p9_pallet_code` (`pallet_code`),
+  KEY `idx_p9_flow_status` (`flow_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=DYNAMIC;

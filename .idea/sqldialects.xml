@@ -11,10 +11,7 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/008_item_info_update_time.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/008_p1_inventory_transaction_alert_mail.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/009_p1_inventory_sync_lock.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/010_device_info_location_code.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/011_warn_msg_device_binding.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/012_device_info_warn_msg.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/013_warn_msg_alarm_lifecycle.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/014_seagate_fis_e10_sys_config.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/015_p6_serial_no_attributes.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/016_p6_p9_line_info.sql" dialect="MySQL" />
@@ -27,5 +24,15 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/024_p6_loading_tote_out_task_define.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/025_p6_picking_tote_out_task_define.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/026_migrate_spring_scheduled_to_quartz.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/028_pallet_cell_consistency_job.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/029_p9_carton_info.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/030_p9_outbound.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/031_pallet_split_flag.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/032_p1_empty_black_info.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/033_device_info_auto_register.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/034_warn_msg_identity_by_message.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/035_device_alarm_state_from_wcs_log.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/036_p4_non_split_inbound_no_sync.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/037_repair_p4_split_sync_status.sql" dialect="MySQL" />
   </component>
 </project>

@@ -171,3 +171,11 @@ xj:
         test-case-id:
             item-code: 210614102
             quantity: 9999
+    p9:
+        carton-query-url: https://api-dev.seagate.com/rest/iscm/asrs/queryP9Inventory
+        batch-validation-url: ""
+        batch-request-field: cartonIds
+        connect-timeout-ms: 10000
+        read-timeout-ms: 10000
+        outbound:
+            to-cell-code: P9_OUT
