@@ -23,7 +23,6 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/023_p6_empty_tote_out_task_define.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/024_p6_loading_tote_out_task_define.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/025_p6_picking_tote_out_task_define.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/026_migrate_spring_scheduled_to_quartz.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/028_pallet_cell_consistency_job.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/029_p9_carton_info.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/030_p9_outbound.sql" dialect="MySQL" />
@@ -34,5 +33,6 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/035_device_alarm_state_from_wcs_log.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/036_p4_non_split_inbound_no_sync.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/037_repair_p4_split_sync_status.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/038_remove_legacy_p9_inventory_job.sql" dialect="MySQL" />
   </component>
 </project>

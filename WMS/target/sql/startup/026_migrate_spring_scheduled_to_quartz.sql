@@ -49,17 +49,6 @@ INSERT INTO `sys_job`
     (`job_name`, `job_group`, `invoke_target`, `cron_expression`, `misfire_policy`, `concurrent`, `status`,
      `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
 SELECT
-    'P9库存请求', 'DEFAULT', 'XjRecordType.requestP9Inventory', '0/2 * * * * ?', '3', '1', '1',
-    'admin', NOW(), 'admin', NOW(), '由Spring @Scheduled迁移；Quartz集群禁止并发'
-FROM DUAL
-WHERE NOT EXISTS (
-    SELECT 1 FROM `sys_job` WHERE `invoke_target` = 'XjRecordType.requestP9Inventory'
-);
-
-INSERT INTO `sys_job`
-    (`job_name`, `job_group`, `invoke_target`, `cron_expression`, `misfire_policy`, `concurrent`, `status`,
-     `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
-SELECT
     '货位线体位置状态清理', 'DEFAULT', 'cellState.setCellTaskState', '0/1 * * * * ?', '3', '1', '1',
     'admin', NOW(), 'admin', NOW(), '由Spring @Scheduled迁移；Quartz集群禁止并发'
 FROM DUAL
@@ -127,7 +116,6 @@ WHERE `invoke_target` IN (
     'XjRecordType.autoRun',
     'XjRecordType.retryPendingP1Transactions',
     'XjRecordType.requestP4Inventory',
-    'XjRecordType.requestP9Inventory',
     'cellState.setCellTaskState',
     'AutoPdTask.autoPd',
     'XjHandle.setCellTaskState',
