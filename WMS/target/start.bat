@@ -1,5 +1,5 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
+setlocal EnableExtensions DisableDelayedExpansion
 
 set "APP_HOME=%~dp0"
 set "JVM_OPTS=-Xms512m -Xmx1024m -Dfile.encoding=UTF-8"
@@ -77,35 +77,28 @@ if errorlevel 1 (
 if not exist "%SQL_DIR%" mkdir "%SQL_DIR%"
 if not exist "%SQL_DONE_DIR%" mkdir "%SQL_DONE_DIR%"
 
+echo Checking database connection...
+set "MYSQL_PWD=%DB_PASS%"
+"%MYSQL_CMD%" --protocol=TCP --connect-timeout=10 --default-character-set=utf8mb4 --host="%DB_HOST%" --port="%DB_PORT%" --user="%DB_USER%" --database="%DB_NAME%" --execute="SELECT 1;" >nul
+set "DB_CHECK_CODE=%ERRORLEVEL%"
+set "MYSQL_PWD="
+if not "%DB_CHECK_CODE%"=="0" (
+    echo ERROR: Database connection check failed. No startup SQL was executed.
+    echo Please verify DB_HOST, DB_PORT, DB_NAME, DB_USER and DB_PASS in "%LOCAL_ENV_FILE%" or "%DB_CONFIG_FILE%".
+    pause
+    exit /b %DB_CHECK_CODE%
+)
+echo Database connection check succeeded.
+
 echo Running startup SQL scripts from "%SQL_DIR%"...
 set "HAS_SQL=0"
 
 for /f "delims=" %%F in ('dir /b /a-d "%SQL_DIR%\*.sql" 2^>nul') do (
-    set "HAS_SQL=1"
-    set "SCRIPT_FILE=%SQL_DIR%\%%F"
-    set "MARK_FILE=%SQL_DONE_DIR%\%%~nF.done"
-
-    if exist "!MARK_FILE!" (
-        echo Skip applied startup SQL: %%F
-    ) else (
-        echo Running startup SQL: %%F
-        set "MYSQL_PWD=%DB_PASS%"
-        "%MYSQL_CMD%" --default-character-set=utf8mb4 -h%DB_HOST% -P%DB_PORT% -u%DB_USER% %DB_NAME% < "!SCRIPT_FILE!"
-        set "EXIT_CODE=!ERRORLEVEL!"
-        set "MYSQL_PWD="
-
-        if not "!EXIT_CODE!"=="0" (
-            echo ERROR: Startup SQL execution failed for %%F. Application not started.
-            pause
-            exit /b !EXIT_CODE!
-        )
-
-        > "!MARK_FILE!" echo Applied at %date% %time%
-        echo Startup SQL completed: %%F
-    )
+    call :RUN_STARTUP_SQL "%%F"
+    if errorlevel 1 goto :STARTUP_SQL_FAILED
 )
 
-if "!HAS_SQL!"=="0" (
+if "%HAS_SQL%"=="0" (
     echo No startup SQL files found. Skip database patch step.
 )
 
@@ -118,3 +111,35 @@ echo -------------------------------------------------------------------
 echo Application exited.
 
 pause
+exit /b 0
+
+:RUN_STARTUP_SQL
+set "HAS_SQL=1"
+set "SCRIPT_NAME=%~1"
+set "SCRIPT_FILE=%SQL_DIR%\%~1"
+set "MARK_FILE=%SQL_DONE_DIR%\%~n1.done"
+
+if exist "%MARK_FILE%" (
+    echo Skip applied startup SQL: %SCRIPT_NAME%
+    exit /b 0
+)
+
+echo Running startup SQL: %SCRIPT_NAME%
+set "MYSQL_PWD=%DB_PASS%"
+"%MYSQL_CMD%" --protocol=TCP --connect-timeout=10 --default-character-set=utf8mb4 --host="%DB_HOST%" --port="%DB_PORT%" --user="%DB_USER%" --database="%DB_NAME%" < "%SCRIPT_FILE%"
+set "EXIT_CODE=%ERRORLEVEL%"
+set "MYSQL_PWD="
+
+if not "%EXIT_CODE%"=="0" (
+    echo ERROR: Startup SQL execution failed for %SCRIPT_NAME%. Application not started.
+    exit /b %EXIT_CODE%
+)
+
+> "%MARK_FILE%" echo Applied at %date% %time%
+echo Startup SQL completed: %SCRIPT_NAME%
+exit /b 0
+
+:STARTUP_SQL_FAILED
+set "STARTUP_EXIT_CODE=%ERRORLEVEL%"
+pause
+exit /b %STARTUP_EXIT_CODE%

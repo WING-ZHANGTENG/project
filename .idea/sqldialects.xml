@@ -36,5 +36,6 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/038_remove_legacy_p9_inventory_job.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/039_i18n_menu_dict_backfill.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/040_p1_empty_black_pallet_quantity.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/041_i18n_menu_dict_complete.sql" dialect="MySQL" />
   </component>
 </project>
