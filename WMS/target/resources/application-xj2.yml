@@ -190,6 +190,11 @@ seagate:
 
 xj:
     finishGoodsP1Api: http://127.0.0.1:8088/seagate/p1/finished-goods
+    e10:
+        # FIS客户端超过该时间仍未返回时，本次推送按失败/超时记录，避免阻塞WCS请求线程。
+        external-timeout-ms: 5000
+        # 每次推送前保存的E10完整报文；相对路径基于WMS进程工作目录。
+        message-directory: E10
     p4:
         case-id-url: http://tkweb-pcksvc.kor.thai.seagate.com/PckWebJson/Ver1/GetSerialList
         fis-url: http://woopiffsl08c.seagate.com:8080/Getput?TYPE=GET&CLA=STRK
@@ -197,6 +202,10 @@ xj:
         test-case-id:
             item-code: 210614102
             quantity: 9999
+        outbound:
+            # Fair-lock queue wait and fail-safe lease for P4 outbound creation.
+            lock-wait-seconds: 15
+            lock-lease-seconds: 60
     p6:
         # FIS CURRENT_ATTRIBUTES query endpoint for HDD serial numbers.
         fis-url: http://woopiffsl08c.seagate.com:8080/Getput?TYPE=GET&CLA=STRK
