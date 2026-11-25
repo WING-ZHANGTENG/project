@@ -39,5 +39,6 @@
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/041_i18n_menu_dict_complete.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/042_p4_outbound_request.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/043_p6_outbound_type_codes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/WMS/target/sql/startup/044_p4_outbound_button_item_code.sql" dialect="MySQL" />
   </component>
 </project>
