@@ -186,7 +186,11 @@ seagate:
     canRun: true
     # P1 纸箱转 P4 前的 PWAIN 预处理接口。
     pwain-transfer-url: https://stg-sms.seagate.com:8009/PWAIN.WebService/api/v1/pallet-case-drvs-transfer
+    # 单次尝试的连接超时和读取超时分别为10秒。
     pwain-timeout-ms: 10000
+    # 首次调用计入次数；失败后间隔5秒，最多尝试3次，任意一次成功即停止。
+    pwain-max-attempts: 3
+    pwain-retry-interval-ms: 5000
 
 xj:
     finishGoodsP1Api: http://127.0.0.1:8088/seagate/p1/finished-goods
